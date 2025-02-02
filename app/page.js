@@ -1,11 +1,6 @@
 import Image from "next/image";
 import { WarpBackground } from "@/components/ui/warp-background";
-import dynamic from 'next/dynamic';
-
-// Import PointsTable with no SSR to avoid hydration issues
-const PointsTable = dynamic(() => import('./components/PointsTable'), {
-  ssr: false,
-});
+import ClientWrapper from "./components/ClientWrapper";
 
 export default function Home() {
   return (
@@ -58,7 +53,7 @@ export default function Home() {
       </div>
 
       {/* Points Table */}
-      <PointsTable />
+      <ClientWrapper />
     </>
   );
 }
