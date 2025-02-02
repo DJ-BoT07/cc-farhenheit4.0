@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { WarpBackground } from "@/components/ui/warp-background";
+import ClientWarpBackground from "./ClientWarpBackground";
 
 export default function HeroSection() {
   return (
@@ -25,7 +25,7 @@ export default function HeroSection() {
 
       {/* Logo container with warp background */}
       <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-8rem)] lg:min-h-0">
-        <WarpBackground 
+        <ClientWarpBackground 
           className="border-none p-0 w-full h-full scale-125 sm:scale-100"
           gridColor="rgba(255,255,255,0.1)"
         >
@@ -46,7 +46,7 @@ export default function HeroSection() {
               />
             </div>
           </div>
-        </WarpBackground>
+        </ClientWarpBackground>
       </div>
     </div>
   );

@@ -3,6 +3,12 @@ import { cn } from "@/lib/utils";
 import Lottie from "lottie-react";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
+import dynamic from 'next/dynamic';
+
+// Dynamically import Lottie to avoid SSR issues
+const DynamicLottie = dynamic(() => import('lottie-react'), {
+  ssr: false,
+});
 
 export const WarpBackground = ({
   children,
@@ -12,21 +18,37 @@ export const WarpBackground = ({
   ...props
 }) => {
   const [animationData, setAnimationData] = useState(null);
-  const [windowWidth, setWindowWidth] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(1024); // Default to desktop size
 
   useEffect(() => {
-    import("/public/fire1.json").then((data) => {
-      setAnimationData(data.default);
-    });
+    setMounted(true);
+    const loadAnimation = async () => {
+      try {
+        const data = await import("/public/fire1.json");
+        setAnimationData(data.default);
+      } catch (error) {
+        console.error('Error loading animation:', error);
+      }
+    };
+
+    loadAnimation();
 
     // Add responsive perspective calculation
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    
+    if (typeof window !== 'undefined') {
+      handleResize();
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
   }, []);
+
+  if (!mounted) {
+    return null; // or a loading state
+  }
 
   // Calculate responsive perspective
   const responsivePerspective = windowWidth < 640 ? 30 :
@@ -55,6 +77,27 @@ export const WarpBackground = ({
     transform: 'translate(-50%, -50%)'
   };
 
+  const renderLottieAnimation = () => {
+    if (!animationData) return null;
+    
+    return (
+      <div className="absolute inset-0">
+        <motion.div 
+          className="absolute inset-0"
+          variants={rotationVariants}
+          animate="animate"
+        >
+          <DynamicLottie
+            animationData={animationData}
+            loop={true}
+            autoplay={true}
+            style={lottieStyle}
+          />
+        </motion.div>
+      </div>
+    );
+  };
+
   return (
     <div className={cn("relative rounded border p-2 xs:p-3 sm:p-4 md:p-6 lg:p-8", className)} {...props}>
       <div
@@ -67,79 +110,19 @@ export const WarpBackground = ({
       >
         {/* top side */}
         <div className="absolute [transform-style:preserve-3d] [background-size:var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,_transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,_var(--grid-color)_0_1px,_transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] [container-type:inline-size] [height:100cqmax] [transform-origin:50%_0%] [transform:rotateX(-90deg)] [width:100cqi]">
-          {animationData && (
-            <div className="absolute inset-0">
-              <motion.div 
-                className="absolute inset-0"
-                variants={rotationVariants}
-                animate="animate"
-              >
-                <Lottie
-                  animationData={animationData}
-                  loop={true}
-                  autoplay={true}
-                  style={lottieStyle}
-                />
-              </motion.div>
-            </div>
-          )}
+          {renderLottieAnimation()}
         </div>
         {/* bottom side */}
         <div className="absolute top-full [transform-style:preserve-3d] [background-size:var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,_transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,_var(--grid-color)_0_1px,_transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] [container-type:inline-size] [height:100cqmax] [transform-origin:50%_0%] [transform:rotateX(-90deg)] [width:100cqi]">
-          {animationData && (
-            <div className="absolute inset-0">
-              <motion.div 
-                className="absolute inset-0"
-                variants={rotationVariants}
-                animate="animate"
-              >
-                <Lottie
-                  animationData={animationData}
-                  loop={true}
-                  autoplay={true}
-                  style={lottieStyle}
-                />
-              </motion.div>
-            </div>
-          )}
+          {renderLottieAnimation()}
         </div>
         {/* left side */}
         <div className="absolute left-0 top-0 [transform-style:preserve-3d] [background-size:var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,_transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,_var(--grid-color)_0_1px,_transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] [container-type:inline-size] [height:100cqmax] [transform-origin:0%_0%] [transform:rotate(90deg)_rotateX(-90deg)] [width:100cqh]">
-          {animationData && (
-            <div className="absolute inset-0">
-              <motion.div 
-                className="absolute inset-0"
-                variants={rotationVariants}
-                animate="animate"
-              >
-                <Lottie
-                  animationData={animationData}
-                  loop={true}
-                  autoplay={true}
-                  style={lottieStyle}
-                />
-              </motion.div>
-            </div>
-          )}
+          {renderLottieAnimation()}
         </div>
         {/* right side */}
         <div className="absolute right-0 top-0 [transform-style:preserve-3d] [background-size:var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,_transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,_var(--grid-color)_0_1px,_transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] [container-type:inline-size] [height:100cqmax] [width:100cqh] [transform-origin:100%_0%] [transform:rotate(-90deg)_rotateX(-90deg)]">
-          {animationData && (
-            <div className="absolute inset-0">
-              <motion.div 
-                className="absolute inset-0"
-                variants={rotationVariants}
-                animate="animate"
-              >
-                <Lottie
-                  animationData={animationData}
-                  loop={true}
-                  autoplay={true}
-                  style={lottieStyle}
-                />
-              </motion.div>
-            </div>
-          )}
+          {renderLottieAnimation()}
         </div>
       </div>
       <div className="relative">{children}</div>
