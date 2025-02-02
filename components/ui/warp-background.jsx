@@ -1,13 +1,13 @@
 "use client";
 import { cn } from "@/lib/utils";
-import Lottie from "lottie-react";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import dynamic from 'next/dynamic';
 
-// Dynamically import Lottie to avoid SSR issues
+// Dynamically import Lottie with no SSR
 const DynamicLottie = dynamic(() => import('lottie-react'), {
   ssr: false,
+  loading: () => null
 });
 
 export const WarpBackground = ({
@@ -18,37 +18,45 @@ export const WarpBackground = ({
   ...props
 }) => {
   const [animationData, setAnimationData] = useState(null);
-  const [mounted, setMounted] = useState(false);
   const [windowWidth, setWindowWidth] = useState(1024); // Default to desktop size
 
   useEffect(() => {
-    setMounted(true);
+    let mounted = true;
+
     const loadAnimation = async () => {
       try {
-        const data = await import("/public/fire1.json");
-        setAnimationData(data.default);
+        if (typeof window !== 'undefined') {
+          const data = await import("/public/fire1.json");
+          if (mounted) {
+            setAnimationData(data.default);
+          }
+        }
       } catch (error) {
         console.error('Error loading animation:', error);
       }
     };
 
-    loadAnimation();
-
-    // Add responsive perspective calculation
     const handleResize = () => {
-      setWindowWidth(window.innerWidth);
+      if (typeof window !== 'undefined') {
+        setWindowWidth(window.innerWidth);
+      }
     };
-    
-    if (typeof window !== 'undefined') {
-      handleResize();
-      window.addEventListener('resize', handleResize);
-      return () => window.removeEventListener('resize', handleResize);
-    }
-  }, []);
 
-  if (!mounted) {
-    return null; // or a loading state
-  }
+    loadAnimation();
+    handleResize();
+
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', handleResize);
+      return () => {
+        mounted = false;
+        window.removeEventListener('resize', handleResize);
+      };
+    }
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   // Calculate responsive perspective
   const responsivePerspective = windowWidth < 640 ? 30 :
