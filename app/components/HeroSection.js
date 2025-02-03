@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import ClientWarpBackground from "./ClientWarpBackground";
+import { motion } from "framer-motion";
 
 export default function HeroSection() {
   return (
@@ -16,12 +17,44 @@ export default function HeroSection() {
       </nav>
 
       {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-600 via-red-500 to-yellow-500 animate-gradient-xy">
-        {/* Noise overlay */}
-        <div className="absolute inset-0 opacity-50 mix-blend-overlay">
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMC4xNSIvPjwvc3ZnPg==')]"></div>
+      <motion.div 
+        className="absolute inset-0 bg-gradient-to-br from-orange-600 via-red-500 to-yellow-500"
+        animate={{
+          background: [
+            "linear-gradient(to bottom right, rgb(234, 88, 12), rgb(239, 68, 68), rgb(234, 179, 8))",
+            "linear-gradient(to bottom right, rgb(234, 179, 8), rgb(234, 88, 12), rgb(239, 68, 68))",
+            "linear-gradient(to bottom right, rgb(239, 68, 68), rgb(234, 179, 8), rgb(234, 88, 12))"
+          ]
+        }}
+        transition={{
+          duration: 10,
+          ease: "linear",
+          repeat: Infinity,
+          repeatType: "loop"
+        }}
+        style={{
+          backgroundSize: "200% 200%",
+          willChange: "background",
+          backfaceVisibility: "hidden",
+          WebkitBackfaceVisibility: "hidden",
+          WebkitTransform: "translate3d(0,0,0)",
+          transform: "translate3d(0,0,0)"
+        }}
+      >
+        {/* Noise overlay with reduced opacity for mobile */}
+        <div className="absolute inset-0 opacity-30 xs:opacity-50 mix-blend-overlay transition-opacity duration-1000">
+          <div 
+            className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbHRlcj0idXJsKCNhKSIgb3BhY2l0eT0iMC4xNSIvPjwvc3ZnPg==')]"
+            style={{
+              willChange: "transform",
+              backfaceVisibility: "hidden",
+              WebkitBackfaceVisibility: "hidden",
+              WebkitTransform: "translate3d(0,0,0)",
+              transform: "translate3d(0,0,0)"
+            }}
+          ></div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Logo container with warp background */}
       <div className="flex-1 flex items-center justify-center min-h-[calc(100vh-8rem)] lg:min-h-0">
@@ -33,7 +66,24 @@ export default function HeroSection() {
             {/* Logo Container */}
             <div className="relative w-[300px] h-[300px] xs:w-[500px] xs:h-[500px] sm:w-[500px] sm:h-[500px] md:w-[700px] md:h-[700px] lg:w-[700px] lg:h-[700px] xl:w-[800px] xl:h-[800px] flex items-center justify-center">
               {/* Glowing effect behind logo */}
-              <div className="absolute inset-0 blur-3xl bg-orange-500/30 animate-pulse rounded-full scale-110"></div>
+              <motion.div 
+                className="absolute inset-0 blur-3xl bg-orange-500/30 rounded-full scale-110"
+                animate={{
+                  opacity: [0.2, 0.4, 0.2],
+                  scale: [1.1, 1.15, 1.1]
+                }}
+                transition={{
+                  duration: 4,
+                  ease: "easeInOut",
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+                style={{
+                  willChange: "opacity, transform",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden"
+                }}
+              />
               
               {/* Logo */}
               <Image
@@ -41,7 +91,12 @@ export default function HeroSection() {
                 src="/F.png"
                 alt="Logo"
                 fill
-                style={{ objectFit: 'contain' }}
+                style={{ 
+                  objectFit: 'contain',
+                  willChange: 'transform',
+                  backfaceVisibility: 'hidden',
+                  WebkitBackfaceVisibility: 'hidden'
+                }}
                 priority
               />
             </div>
