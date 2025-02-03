@@ -2,6 +2,7 @@
 import { Suspense, useEffect, useState } from "react";
 import dynamic from 'next/dynamic';
 import LoadingScreen from "./components/LoadingScreen";
+import Footer from "./components/Footer";
 
 // Dynamically import components with loading states
 const HeroSection = dynamic(() => import("./components/HeroSection"), {
@@ -36,9 +37,14 @@ export default function Home() {
   }
 
   return (
-    <Suspense fallback={<LoadingScreen />}>
-      <HeroSection />
-      <ClientWrapper />
-    </Suspense>
+    <div className="min-h-screen flex flex-col">
+      <main className="flex-grow">
+        <Suspense fallback={<LoadingScreen />}>
+          <HeroSection />
+          <ClientWrapper />
+        </Suspense>
+      </main>
+      <Footer />
+    </div>
   );
 }
