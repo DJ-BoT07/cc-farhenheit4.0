@@ -38,7 +38,7 @@ export default function PointsTable() {
             },
             {
               Ranking: 2,
-              Department: "Infrumentation & Control",
+              Department: "Instrumentation & Control",
               "First Places": 4,
               "Second Places": 4,
               "Total Wins": 1,
