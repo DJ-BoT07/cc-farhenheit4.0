@@ -3,7 +3,7 @@ import { useState } from 'react';
 import * as XLSX from 'xlsx';
 import { useRouter } from 'next/navigation';
 
-export default function SambhavPage() {
+export default function IndigoPage() {
   const [uploading, setUploading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
   const router = useRouter();
@@ -94,7 +94,7 @@ export default function SambhavPage() {
           <span>Back to Home</span>
         </button>
 
-        <h1 className="text-4xl font-bold mb-8 text-center">Sambhav Dashboard</h1>
+        <h1 className="text-4xl font-bold mb-8 text-center">Indigo Dashboard</h1>
         
         {/* Upload Section */}
         <div className="bg-black/40 backdrop-blur-xl rounded-2xl border border-orange-500/20 p-8 mb-8">
